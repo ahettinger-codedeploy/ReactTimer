@@ -25560,7 +25560,7 @@
 	            null,
 	            React.createElement(
 	              IndexLink,
-	              { to: '/', activeClassName: 'active', activeStyle: { color: 'purple' } },
+	              { to: '/', activeClassName: 'active-link' },
 	              'Timer'
 	            )
 	          ),
@@ -25569,7 +25569,7 @@
 	            null,
 	            React.createElement(
 	              Link,
-	              { to: '/Countdown', activeClassName: 'active', activeStyle: { color: 'purple' } },
+	              { to: '/Countdown', activeClassName: 'active-link' },
 	              'Countdown'
 	            )
 	          )
@@ -25587,7 +25587,7 @@
 	            'Created by ',
 	            React.createElement(
 	              'a',
-	              { href: 'http://adamlab.tech' },
+	              { href: 'http://adamlab.tech', target: '_blank' },
 	              'Adam Hettinger'
 	            )
 	          )
@@ -26018,7 +26018,7 @@
 
 
 	// module
-	exports.push([module.id, ".top-bar,\n.top-bar ul {\n  background-color: #333333; }\n\n.top-bar .menu-text {\n  color: white; }\n\n.menu > .menu-text > a {\n  display: inline;\n  padding: 0; }\n", ""]);
+	exports.push([module.id, ".top-bar,\n.top-bar ul {\n  background-color: #333333; }\n\n.top-bar .menu-text {\n  color: white; }\n\n.top-bar .active-link {\n  color: red;\n  font-weight: bold; }\n\n.menu > .menu-text > a {\n  display: inline;\n  padding: 0; }\n", ""]);
 
 	// exports
 

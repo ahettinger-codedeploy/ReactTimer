@@ -7,6 +7,11 @@
   .menu-text {
     color: $nav-color;
   }
+
+  .active-link {
+    color: red;
+    font-weight: bold;
+  }
 }
 
 .menu>.menu-text>a {
