@@ -107,13 +107,20 @@
 	var Nav = __webpack_require__(230);
 	var Timer = __webpack_require__(231);
 	var Countdown = __webpack_require__(232);
+	var Countup = __webpack_require__(235);
+	var Help = __webpack_require__(238);
+	var HelpNav = __webpack_require__(239);
+	var HelpKB = __webpack_require__(240);
+	var HelpNews = __webpack_require__(241);
+	var HelpVideo = __webpack_require__(242);
+	var HelpContact = __webpack_require__(243);
 
 	// Load foundation
-	__webpack_require__(234);
+	__webpack_require__(244);
 	$(document).foundation();
 
 	//App css
-	__webpack_require__(238);
+	__webpack_require__(248);
 
 	ReactDOM.render(React.createElement(
 	  Router,
@@ -122,6 +129,16 @@
 	    Route,
 	    { path: '/', component: Main },
 	    React.createElement(Route, { path: '/Countdown', component: Countdown }),
+	    React.createElement(Route, { path: '/Countup', component: Countup }),
+	    React.createElement(
+	      Route,
+	      { path: '/Help', component: Help },
+	      React.createElement(Route, { path: '/HelpKB', component: HelpKB }),
+	      React.createElement(Route, { path: '/HelpNews', component: HelpNews }),
+	      React.createElement(Route, { path: '/HelpVideo', component: HelpVideo }),
+	      React.createElement(Route, { path: '/HelpContact', component: HelpContact }),
+	      React.createElement(IndexRoute, { component: HelpKB })
+	    ),
 	    React.createElement(IndexRoute, { component: Timer })
 	  )
 	), document.getElementById("app"));
@@ -25505,13 +25522,13 @@
 	  return React.createElement(
 	    'div',
 	    null,
+	    React.createElement(Nav, null),
 	    React.createElement(
 	      'div',
-	      null,
+	      { className: 'row' },
 	      React.createElement(
 	        'div',
-	        null,
-	        React.createElement(Nav, null),
+	        { className: 'column small-centered medium-6 large-4' },
 	        React.createElement(
 	          'p',
 	          null,
@@ -25572,6 +25589,24 @@
 	              { to: '/Countdown', activeClassName: 'active-link' },
 	              'Countdown'
 	            )
+	          ),
+	          React.createElement(
+	            'li',
+	            null,
+	            React.createElement(
+	              Link,
+	              { to: '/Countup', activeClassName: 'active-link' },
+	              'Countup'
+	            )
+	          ),
+	          React.createElement(
+	            'li',
+	            null,
+	            React.createElement(
+	              Link,
+	              { to: '/Help', activeClassName: 'active-link' },
+	              'Help'
+	            )
 	          )
 	        )
 	      ),
@@ -25625,14 +25660,54 @@
 
 	var React = __webpack_require__(8);
 	var Clock = __webpack_require__(233);
+	var CountdownForm = __webpack_require__(234);
 
-	var Countdown = function Countdown(props) {
-	  return React.createElement(
-	    'div',
-	    null,
-	    React.createElement(Clock, { totalSeconds: 61 })
-	  );
-	};
+	var Countdown = React.createClass({
+	  displayName: 'Countdown',
+
+	  getInitialState: function getInitialState() {
+	    return {
+	      count: 0,
+	      countdownStatus: 'stopped'
+	    };
+	  },
+	  componentDidUpdate: function componentDidUpdate(prevProps, prevState) {
+	    if (this.state.countdownStatus !== prevState.countdownStatus) {
+	      switch (this.state.countdownStatus) {
+	        case 'started':
+	          this.startTimer();
+	          break;
+	      }
+	    }
+	  },
+	  startTimer: function startTimer() {
+	    var _this = this;
+
+	    this.timer = setInterval(function () {
+	      var newCount = _this.state.count - 1;
+	      _this.setState({
+	        count: newCount >= 0 ? newCount : 0
+	      });
+	    }, 1000);
+	  },
+	  handleSetCountdown: function handleSetCountdown(seconds) {
+	    this.setState({
+	      count: seconds,
+	      countdownStatus: 'started'
+	    });
+	  },
+	  render: function render() {
+	    var count = this.state.count;
+
+
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(Clock, { totalSeconds: count }),
+	      React.createElement(CountdownForm, { onSetCountdown: this.handleSetCountdown })
+	    );
+	  }
+	});
 
 	module.exports = Countdown;
 
@@ -25693,13 +25768,317 @@
 /* 234 */
 /***/ function(module, exports, __webpack_require__) {
 
+	"use strict";
+
+	var React = __webpack_require__(8);
+
+	var CountdownForm = React.createClass({
+	  displayName: "CountdownForm",
+
+	  onSubmit: function onSubmit(e) {
+	    e.preventDefault();
+	    var strSeconds = this.refs.seconds.value;
+
+	    if (strSeconds.match(/^[0-9]*$/)) {
+	      this.refs.seconds.value = "";
+	      this.props.onSetCountdown(parseInt(strSeconds, 10));
+	    }
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      "div",
+	      null,
+	      React.createElement(
+	        "form",
+	        { ref: "form", onSubmit: this.onSubmit, className: "countdown-form" },
+	        React.createElement("input", { type: "text", ref: "seconds", placeholder: "Enter time in seconds" }),
+	        React.createElement(
+	          "button",
+	          { className: "button expanded" },
+	          "Start"
+	        )
+	      )
+	    );
+	  }
+	});
+
+	module.exports = CountdownForm;
+
+/***/ },
+/* 235 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(8);
+	var CountupClock = __webpack_require__(236);
+	var CountupForm = __webpack_require__(237);
+
+	var Countup = React.createClass({
+	  displayName: 'Countup',
+
+	  getInitialState: function getInitialState() {
+	    return {
+	      seconds: 0,
+	      status: 'stopped'
+	    };
+	  },
+	  componentDidUpdate: function componentDidUpdate(prevProps, prevState) {
+	    if (this.state.status !== prevState.status) {
+	      switch (this.state.status) {
+	        case 'started':
+	          console.log(this.state.status);
+	          this.startCountUp();
+	          break;
+	      }
+	    }
+	  },
+	  startCountUp: function startCountUp() {
+	    var _this = this;
+
+	    this.countUp = setInterval(function () {
+	      var newCount = _this.state.seconds + 1;
+	      _this.setState({
+	        seconds: newCount
+	      });
+	    }, 1000);
+	  },
+	  handleSubmit: function handleSubmit(s) {
+	    this.setState({
+	      seconds: s,
+	      status: 'started'
+	    });
+	  },
+	  render: function render() {
+	    var seconds = this.state.seconds;
+
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'h1',
+	        null,
+	        'COUNTUP'
+	      ),
+	      React.createElement(CountupClock, { secondsDisplay: seconds }),
+	      React.createElement(CountupForm, { onSecondsSubmit: this.handleSubmit })
+	    );
+	  }
+	});
+
+	module.exports = Countup;
+
+/***/ },
+/* 236 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(8);
+
+	var CountupClock = React.createClass({
+	  displayName: 'CountupClock',
+
+	  render: function render() {
+	    return React.createElement(
+	      'p',
+	      null,
+	      this.props.secondsDisplay
+	    );
+	  }
+	});
+
+	module.exports = CountupClock;
+
+/***/ },
+/* 237 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var React = __webpack_require__(8);
+
+	var CountupForm = React.createClass({
+	  displayName: "CountupForm",
+
+	  handleSubmit: function handleSubmit(e) {
+	    e.preventDefault();
+	    var secs = this.refs.countupsecs.value;
+	    this.props.onSecondsSubmit(parseInt(secs, 10));
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      "form",
+	      { onSubmit: this.handleSubmit },
+	      React.createElement("input", { type: "text", ref: "countupsecs" }),
+	      React.createElement(
+	        "button",
+	        { className: "button" },
+	        "Click"
+	      )
+	    );
+	  }
+	});
+
+	module.exports = CountupForm;
+
+/***/ },
+/* 238 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(8);
+	var HelpNav = __webpack_require__(239);
+
+	var Help = React.createClass({
+	  displayName: 'Help',
+
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'h1',
+	        null,
+	        'Help'
+	      ),
+	      React.createElement(HelpNav, null),
+	      this.props.children
+	    );
+	  }
+	});
+
+	module.exports = Help;
+
+/***/ },
+/* 239 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(8);
+
+	var _require = __webpack_require__(166),
+	    Link = _require.Link,
+	    IndexLink = _require.IndexLink;
+
+	var HelpNav = React.createClass({
+	  displayName: 'HelpNav',
+
+	  render: function render() {
+	    return React.createElement(
+	      'nav',
+	      null,
+	      React.createElement(
+	        Link,
+	        { to: '/HelpKB' },
+	        'Knowledge Base'
+	      ),
+	      React.createElement(
+	        Link,
+	        { to: '/HelpNews' },
+	        'News'
+	      ),
+	      React.createElement(
+	        Link,
+	        { to: '/HelpVideo' },
+	        'Videos'
+	      ),
+	      React.createElement(
+	        Link,
+	        { to: '/HelpContact' },
+	        'Contact'
+	      )
+	    );
+	  }
+	});
+
+	module.exports = HelpNav;
+
+/***/ },
+/* 240 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(8);
+
+	var HelpKB = function HelpKB(props) {
+	  return React.createElement(
+	    'h3',
+	    null,
+	    'Knowledge Base'
+	  );
+	};
+
+	module.exports = HelpKB;
+
+/***/ },
+/* 241 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(8);
+
+	var HelpNews = function HelpNews(props) {
+	  return React.createElement(
+	    'h3',
+	    null,
+	    'Help News'
+	  );
+	};
+
+	module.exports = HelpNews;
+
+/***/ },
+/* 242 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(8);
+
+	var HelpVideo = function HelpVideo(props) {
+	  return React.createElement(
+	    'h3',
+	    null,
+	    'Help Videos'
+	  );
+	};
+
+	module.exports = HelpVideo;
+
+/***/ },
+/* 243 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(8);
+
+	var HelpContact = function HelpContact(props) {
+	  return React.createElement(
+	    'h3',
+	    null,
+	    'Contact'
+	  );
+	};
+
+	module.exports = HelpContact;
+
+/***/ },
+/* 244 */
+/***/ function(module, exports, __webpack_require__) {
+
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(235);
+	var content = __webpack_require__(245);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(237)(content, {});
+	var update = __webpack_require__(247)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -25716,10 +26095,10 @@
 	}
 
 /***/ },
-/* 235 */
+/* 245 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(236)();
+	exports = module.exports = __webpack_require__(246)();
 	// imports
 
 
@@ -25730,7 +26109,7 @@
 
 
 /***/ },
-/* 236 */
+/* 246 */
 /***/ function(module, exports) {
 
 	/*
@@ -25786,7 +26165,7 @@
 
 
 /***/ },
-/* 237 */
+/* 247 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -26038,16 +26417,16 @@
 
 
 /***/ },
-/* 238 */
+/* 248 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(239);
+	var content = __webpack_require__(249);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(237)(content, {});
+	var update = __webpack_require__(247)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -26064,10 +26443,10 @@
 	}
 
 /***/ },
-/* 239 */
+/* 249 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(236)();
+	exports = module.exports = __webpack_require__(246)();
 	// imports
 
 

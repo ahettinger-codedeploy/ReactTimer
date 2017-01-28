@@ -26,7 +26,17 @@ module.exports = {
       Nav: 'app/components/Nav.jsx',
       Timer: 'app/components/Timer.jsx',
       Countdown: 'app/components/Countdown.jsx',
+      CountdownForm: 'app/components/CountdownForm',
       Clock: 'app/components/Clock.jsx',
+      Countup: 'app/components/Countup',
+      CountupClock: 'app/components/CountupClock',
+      CountupForm: 'app/components/CountupForm',
+      Help: 'app/components/Help',
+      HelpNav: 'app/components/HelpNav',
+      HelpKB: 'app/components/HelpKB',
+      HelpNews: 'app/components/HelpNews',
+      HelpVideo: 'app/components/HelpVideo',
+      HelpContact: 'app/components/HelpContact',
       applicationStyles: 'app/styles/app.scss'
     },
     extensions: ['', '.js', '.jsx']
