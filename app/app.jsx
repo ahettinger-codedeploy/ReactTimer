@@ -14,7 +14,6 @@ var HelpVideo = require('HelpVideo');
 var HelpContact = require('HelpContact');
 
 // Load foundation
-require('style!css!foundation-sites/dist/foundation.min.css');
 $(document).foundation();
 
 //App css
